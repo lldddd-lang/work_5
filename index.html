@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExoBrain | Intelligent Compute Hardware</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        window.FontAwesomeConfig = { autoReplaceSvg: 'nest' };
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'exo-yellow': '#FFC100',
+                        'exo-yellow-light': '#FFD54F',
+                        'exo-dark': '#0A0A0F',
+                        'exo-surface': '#13131A',
+                        'exo-border': '#1E1E2A',
+                        'exo-gray': '#9CA3AF',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 30px -2px rgba(0, 0, 0, 0.3)',
+                        'glow': '0 0 20px rgba(255,193,0,0.35)',
+                        'glow-lg': '0 0 40px rgba(255,193,0,0.25)',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-12px)' },
+                        },
+                        breathing: {
+                            '0%, 100%': { transform: 'scale(1)' },
+                            '50%': { transform: 'scale(1.05)' },
+                        }
+                    },
+                    animation: {
+                        float: 'float 6s ease-in-out infinite',
+                        breathing: 'breathing 6s ease-in-out infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous"
+        referrerpolicy="no-referrer"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0A0A0F;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #2A2A3A;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FFC100;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A0A0F;
+            color: #E5E7EB;
+            overflow-x: hidden;
+        }
+
+        .tech-grid {
+            background-image:
+                linear-gradient(to right, rgba(255, 193, 0, 0.04) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 193, 0, 0.04) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        #particle-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        :root {
+            --exo-yellow: #FFC100;
+            --exo-dark: #0A0A0F;
+            --exo-surface: #12121A;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 193, 0, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(255, 193, 0, 0.03);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-card:hover {
+            border: 1px solid rgba(255, 193, 0, 0.4);
+            box-shadow: 0 20px 40px 0 rgba(255, 193, 0, 0.12);
+            transform: translateY(-8px) scale(1.01);
+        }
+
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #FFC100 0%, #FFD54F 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gold-glow {
+            filter: drop-shadow(0 0 15px rgba(255, 193, 0, 0.4));
+        }
+
+        .btn-gold {
+            background: var(--exo-yellow);
+            color: var(--exo-dark);
+            font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(255, 193, 0, 0.2);
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 193, 0, 0.4);
+            filter: brightness(1.1);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .separator-glow {
+            height: 1px;
+            width: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 193, 0, 0.1), transparent);
+            margin: 0;
+        }
+
+        .tech-grid-light {
+            background-image:
+                radial-gradient(circle at 2px 2px, rgba(255, 193, 0, 0.05) 1px, transparent 0);
+            background-size: 40px 40px;
+        }
+
+        .hero-title-dark {
+            color: #111827;
+            /* Tailwind gray-900 */
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+        }
+    </style>
+</head>
+
+<body class="antialiased bg-white">
+
+    <!-- Header -->
+    <header id="header" class="fixed w-full top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-exo-yellow/10">
+        <div class="max-w-[1440px] mx-auto px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 text-exo-yellow">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 370.504 370.506" fill="currentColor">
+                        <path
+                            d="M172.08,369.3a28.857,28.857,0,0,1-7.891-26.143c-.807-12.814-4.364-16.61-4.364-16.61l.033-.03-21.381-21.381-.051.045s-3.324-4.223-19.82-5.919l-.034,0a28.881,28.881,0,1,1,24.363-24.684c.025.111.048.227.067.346.022-.435.046-.866.08-1.3.031-.319.052.4.052,1.1a9.032,9.032,0,0,1-.025,1.118.63.63,0,0,1-.021-.183c-.019-.263-.046-.505-.086-.735a32.933,32.933,0,0,0,5.2,18.942l23.127,23.127c1.864,1.43,6.822,4.015,17.739,3.192l.382-.025A28.882,28.882,0,1,1,172.08,369.3Zm78.186-78.188a28.878,28.878,0,1,1,20.421,8.459A28.878,28.878,0,0,1,250.266,291.107Zm78.186-78.185a28.878,28.878,0,1,1,20.421,8.459A28.878,28.878,0,0,1,328.451,212.922Zm-156.371,0a29.176,29.176,0,0,1-2.2-2.464q-.108-.1-.217-.2a46.817,46.817,0,0,0-18.918-10.333H76.706l-.006.07s-8.136.813-16.324,8.208a28.846,28.846,0,1,1,.433-30.713c7.659,7.177,13.729,7.568,14.67,7.584h75.531a34.531,34.531,0,0,0,17.6-8.808,28.885,28.885,0,1,1,3.469,36.657Zm78.186-78.185a28.878,28.878,0,1,1,20.421,8.459A28.878,28.878,0,0,1,250.266,134.736Zm-156.371,0a28.883,28.883,0,0,1,27.2-48.5c.279.006.57.021.876.047,7.674.64,12.117-1.742,14.271-3.465l1.637-1.637,23.13-23.132c1.332-1.736,3.665-6.159,3.313-15.592a28.884,28.884,0,1,1,29.858,22.5c-.583.046-1.222.071-1.922.073-16.916.05-21.691,4.527-21.691,4.527l-.03-.034L149.151,90.909l.045.05a1.281,1.281,0,0,0-.232.137l-.875.875c-1.329,1.689-3.525,6.061-4.662,17.091-.1.921-.218,1.744-.364,2.475a28.881,28.881,0,0,1-49.169,23.2Z"
+                            transform="translate(-7.249 -7.249)" />
+                    </svg>
+                </div>
+                <span class="text-xl font-bold tracking-tight text-gray-900">ExoBrain</span>
+            </div>
+
+            <nav class="hidden lg:flex items-center gap-10">
+                <a href="#hero" class="text-sm font-bold text-gray-500 hover:text-exo-yellow transition-colors">Home</a>
+                <a href="#role"
+                    class="text-sm font-bold text-gray-500 hover:text-exo-yellow transition-colors">Product</a>
+                <a href="#poac" class="text-sm font-bold text-gray-500 hover:text-exo-yellow transition-colors">How It
+                    Works</a>
+                <a href="#worldview"
+                    class="text-sm font-bold text-gray-500 hover:text-exo-yellow transition-colors">Network</a>
+                <a href="#"
+                    class="text-sm font-bold text-gray-500 hover:text-exo-yellow transition-colors">Developers</a>
+                <a href="#" class="text-sm font-bold text-gray-500 hover:text-exo-yellow transition-colors">Noos
+                    Network</a>
+            </nav>
+
+            <div class="flex items-center">
+                <img src="top_right_icon.png" alt="Icon"
+                    class="w-8 h-8 opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
+            </div>
+        </div>
+    </header>
+
+    <!-- 01 Hero Section -->
+    <section id="hero" class="relative pt-32 pb-20 min-h-[800px] flex items-center tech-grid-light overflow-hidden">
+        <!-- We can keep or remove the canvas. Let's make it subtle if kept. -->
+        <canvas id="particle-canvas" class="opacity-20"></canvas>
+        <div class="orb w-[500px] h-[500px] bg-white opacity-50 top-[10%] right-[10%]"></div>
+
+        <div
+            class="max-w-[1440px] mx-auto px-8 w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
+            <div>
+                <!-- Testnet Live Tag -->
+                <div
+                    class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-gray-400 bg-transparent text-xs font-semibold text-gray-800 mb-8">
+                    <span class="w-1.5 h-1.5 rounded-full bg-gray-800"></span>
+                    ExoBrain Testnet Live
+                </div>
+
+                <!-- Main Headings -->
+                <h1 class="text-6xl lg:text-7xl font-bold tracking-tight mb-2 leading-none hero-title-dark">
+                    ExoBrain
+                </h1>
+                <h2 class="text-4xl lg:text-5xl font-bold hero-title-dark mb-8 leading-tight">
+                    Intelligent Compute<br />Hardware for the<br />AGI Economy
+                </h2>
+
+                <!-- Subtitle -->
+                <p
+                    class="text-2xl text-gray-800 mb-6 font-medium border-l-[3px] border-gray-900 pl-4 py-1 leading-snug">
+                    A Native Compute Node for the AGI Network
+                </p>
+                <!-- One-line cognitive anchor -->
+                <p class="text-lg text-gray-700 font-bold mb-12 max-w-lg leading-relaxed">
+                    ExoBrain converts real AI computation into verifiable on-chain intelligence.
+                </p>
+
+                <!-- Buttons -->
+                <div class="flex flex-wrap gap-4">
+                    <button
+                        class="px-8 py-3.5 bg-exo-yellow text-exo-dark rounded-lg flex items-center gap-2 group text-sm font-black tracking-widest uppercase transition-all shadow-md hover:scale-105">
+                        Join Testnet
+                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                    <button
+                        class="px-8 py-3.5 bg-transparent border-2 border-exo-yellow text-exo-dark hover:bg-exo-yellow/5 rounded-lg text-sm font-black tracking-widest uppercase transition-all">
+                        Run Nodes
+                    </button>
+                </div>
+            </div>
+
+            <div class="relative h-[600px] w-full flex items-center justify-center perspective-[2000px]">
+                <div id="hero-image-container"
+                    class="relative w-full h-full transition-transform duration-500 ease-out preserve-3d">
+                    <img id="fluid-image" class="w-full h-full object-contain mix-blend-multiply drop-shadow-2xl"
+                        src="./tubiao.png" alt="ExoBrain Core" />
+                </div>
+
+                <!-- Floating Elements Base on Reference image-->
+                <div class="absolute top-1/4 -left-8 bg-white/95 backdrop-blur-md px-5 py-3 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-gray-100 z-20 animate-[float_6s_ease-in-out_infinite]"
+                    style="animation: float 4s ease-in-out infinite;">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 border border-gray-200 text-gray-800">
+                            <i class="fa-solid fa-microchip text-xs"></i>
+                        </div>
+                        <div>
+                            <div
+                                class="text-[10px] font-mono text-gray-400 uppercase tracking-widest mb-0.5 font-semibold">
+                                Compute Status</div>
+                            <div class="text-[15px] font-bold text-gray-900 leading-none">Active Node</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- A subtle floating element for network (optional, adapted to light theme) -->
+                <div class="absolute bottom-1/4 -right-2 bg-white/95 backdrop-blur-md px-5 py-3 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-gray-100 z-20"
+                    style="animation: float 5s ease-in-out infinite reverse;">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 border border-gray-200 text-gray-600">
+                            <i class="fa-solid fa-link text-xs"></i>
+                        </div>
+                        <div>
+                            <div
+                                class="text-[10px] font-mono text-gray-400 uppercase tracking-widest mb-0.5 font-semibold">
+                                Network</div>
+                            <div class="text-[15px] font-bold text-gray-900 leading-none">Verifiable</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="separator-glow"></div>
+
+    <!-- 02 World View Anchor -->
+    <section id="worldview" class="py-24 bg-[#FAFAFA] tech-grid-light relative">
+        <div class="orb w-[400px] h-[400px] bg-white opacity-40 top-[20%] left-[50%] -translate-x-1/2"></div>
+        <div class="max-w-[1440px] mx-auto px-8 relative z-10">
+            <div class="text-center max-w-3xl mx-auto mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold mb-4 text-[#111] tracking-tight">From Physical Compute to On-Chain
+                    Intelligence</h2>
+                <p class="text-xl text-gray-600 font-medium">ExoBrain converts raw GPU computation into verifiable
+                    on-chain
+                    intelligence contributions.</p>
+            </div>
+
+            <div class="relative py-12 px-8 glass-card rounded-3xl fade-in-up">
+                <div class="flex flex-col lg:flex-row justify-between items-center gap-8 relative z-10">
+                    <!-- Step 1 -->
+                    <div class="text-center group w-full lg:w-auto">
+                        <div
+                            class="w-20 h-20 mx-auto bg-gray-50 rounded-2xl border border-gray-100 flex items-center justify-center mb-4 group-hover:border-exo-yellow transition-colors shadow-sm">
+                            <i class="fa-solid fa-server text-3xl text-gray-400 group-hover:text-exo-yellow"></i>
+                        </div>
+                        <h3 class="font-bold text-gray-800">GPU</h3>
+                    </div>
+
+                    <!-- Arrow -->
+                    <div class="hidden lg:block flex-1 h-[1.5px] bg-gray-100 relative">
+                        <i
+                            class="fa-solid fa-chevron-right absolute right-0 top-1/2 -translate-y-1/2 text-gray-300 text-xs"></i>
+                    </div>
+
+                    <!-- Step 2 (Highlighted) -->
+                    <div class="text-center group w-full lg:w-auto relative">
+                        <div class="absolute -inset-4 bg-[#FFC100]/5 rounded-3xl -z-10 blur-sm"></div>
+                        <div
+                            class="w-24 h-24 mx-auto bg-exo-yellow rounded-2xl shadow-[0_10px_30px_rgba(255,193,0,0.3)] flex items-center justify-center mb-4 transform scale-110">
+                            <i class="fa-solid fa-brain text-4xl text-exo-dark"></i>
+                        </div>
+                        <h3 class="font-bold text-gray-900 text-lg">ExoBrain</h3>
+                        <span
+                            class="text-[10px] font-mono font-bold text-exo-yellow bg-black px-2 py-0.5 rounded mt-2 inline-block">CORE
+                            NODE</span>
+                    </div>
+
+                    <!-- Arrow -->
+                    <div class="hidden lg:block flex-1 h-[1.5px] bg-gray-100 relative">
+                        <i
+                            class="fa-solid fa-chevron-right absolute right-0 top-1/2 -translate-y-1/2 text-gray-300 text-xs"></i>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="text-center group w-full lg:w-auto">
+                        <div
+                            class="w-20 h-20 mx-auto bg-gray-50 rounded-2xl border border-gray-100 flex items-center justify-center mb-4 group-hover:border-exo-yellow transition-colors shadow-sm">
+                            <i class="fa-solid fa-fingerprint text-3xl text-gray-400 group-hover:text-exo-yellow"></i>
+                        </div>
+                        <h3 class="font-bold text-gray-800">PoAC</h3>
+                    </div>
+
+                    <!-- Arrow -->
+                    <div class="hidden lg:block flex-1 h-[1.5px] bg-gray-100 relative">
+                        <i
+                            class="fa-solid fa-chevron-right absolute right-0 top-1/2 -translate-y-1/2 text-gray-300 text-xs"></i>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="text-center group w-full lg:w-auto">
+                        <div
+                            class="w-20 h-20 mx-auto bg-gray-50 rounded-2xl border border-gray-100 flex items-center justify-center mb-4 group-hover:border-exo-yellow transition-colors shadow-sm">
+                            <i class="fa-solid fa-network-wired text-3xl text-gray-400 group-hover:text-exo-yellow"></i>
+                        </div>
+                        <h3 class="font-bold text-gray-800">Noos</h3>
+                    </div>
+
+                    <!-- Arrow -->
+                    <div class="hidden lg:block flex-1 h-[1.5px] bg-gray-100 relative">
+                        <i
+                            class="fa-solid fa-chevron-right absolute right-0 top-1/2 -translate-y-1/2 text-gray-300 text-xs"></i>
+                    </div>
+
+                    <!-- Step 5 -->
+                    <div class="text-center group w-full lg:w-auto">
+                        <div
+                            class="w-20 h-20 mx-auto bg-gray-50 rounded-2xl border border-gray-100 flex items-center justify-center mb-4 group-hover:border-exo-yellow transition-colors shadow-sm">
+                            <i class="fa-solid fa-robot text-3xl text-gray-400 group-hover:text-exo-yellow"></i>
+                        </div>
+                        <h3 class="font-bold text-gray-800">Noema &amp; Agents</h3>
+                    </div>
+
+                    <!-- Arrow -->
+                    <div class="hidden lg:block flex-1 h-[1.5px] bg-gray-100 relative">
+                        <i
+                            class="fa-solid fa-chevron-right absolute right-0 top-1/2 -translate-y-1/2 text-gray-300 text-xs"></i>
+                    </div>
+
+                    <!-- Step 6 -->
+                    <div class="text-center group w-full lg:w-auto">
+                        <div
+                            class="w-20 h-20 mx-auto bg-gray-50 rounded-2xl border border-gray-100 flex items-center justify-center mb-4 group-hover:border-exo-yellow transition-colors shadow-sm">
+                            <i class="fa-solid fa-layer-group text-3xl text-gray-400 group-hover:text-exo-yellow"></i>
+                        </div>
+                        <h3 class="font-bold text-gray-800">Applications</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="separator-glow"></div>
+
+    <!-- 03 Why ExoBrain -->
+    <section id="why" class="py-24 bg-[#FAFAFA] tech-grid-light relative">
+        <div class="orb w-[400px] h-[400px] bg-white opacity-40 bottom-0 right-[10%]"></div>
+        <div class="max-w-[1440px] mx-auto px-8 relative z-10">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold mb-4 text-gray-900">AGI Requires Verifiable Intelligence — Not Just More
+                    Compute</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">Unmeasured or unsettled intelligence cannot become
+                    productive input to AGI.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <div class="glass-card p-10 rounded-2xl relative overflow-hidden group fade-in-up border-exo-yellow/5">
+                    <div
+                        class="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity">
+                        <i class="fa-solid fa-black-hole text-8xl text-black"></i>
+                    </div>
+                    <div class="w-14 h-14 bg-red-500/10 rounded-xl flex items-center justify-center mb-6 text-red-500">
+                        <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-black mb-4 text-gray-900 tracking-tight">Output Black Hole</h3>
+                    <p class="text-gray-500 leading-relaxed text-lg">Intelligent outputs cannot be reliably measured or
+                        attributed.</p>
+                </div>
+
+                <div class="glass-card p-10 rounded-2xl relative overflow-hidden group fade-in-up border-exo-yellow/5">
+                    <div
+                        class="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity">
+                        <i class="fa-solid fa-filter-circle-xmark text-8xl text-black"></i>
+                    </div>
+                    <div class="w-14 h-14 bg-red-500/10 rounded-xl flex items-center justify-center mb-6 text-red-500">
+                        <i class="fa-solid fa-droplet-slash text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-black mb-4 text-gray-900 tracking-tight">Value Leakage</h3>
+                    <p class="text-gray-500 leading-relaxed text-lg">Model and agent improvements fail to persist or
+                        compound over time.</p>
+                </div>
+
+                <div class="glass-card p-10 rounded-2xl relative overflow-hidden group fade-in-up border-exo-yellow/5">
+                    <div
+                        class="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity">
+                        <i class="fa-solid fa-box text-8xl text-black"></i>
+                    </div>
+                    <div class="w-14 h-14 bg-red-500/10 rounded-xl flex items-center justify-center mb-6 text-red-500">
+                        <i class="fa-solid fa-eye-slash text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-black mb-4 text-gray-900 tracking-tight">Compute Black Box</h3>
+                    <p class="text-gray-500 leading-relaxed text-lg">There is no reliable way to verify whether compute
+                        is actually used for real AI tasks.</p>
+                </div>
+            </div>
+
+            <div class="flex flex-col items-center fade-in-up">
+                <div class="h-16 w-[1.5px] bg-gray-200 mb-4"></div>
+                <div class="bg-black text-white px-8 py-3 rounded-full font-bold shadow-sm flex items-center gap-2">
+                    <i class="fa-solid fa-check-circle text-exo-yellow"></i> Solved by ExoBrain
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="separator-glow"></div>
+
+    <!-- 04 What ExoBrain Does -->
+    <section id="role" class="py-24 bg-white relative overflow-hidden">
+        <div class="orb w-[400px] h-[400px] bg-[#FFC100] opacity-[0.03] left-0 top-1/2 -translate-y-1/2"></div>
+        <div class="max-w-[1440px] mx-auto px-8 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
+
+            <div class="order-2 lg:order-1 relative fade-in-up">
+                <div class="relative glass-card rounded-3xl p-8 border-exo-yellow/5">
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-4 bg-white p-4 rounded-xl border border-exo-yellow/10">
+                            <div
+                                class="w-12 h-12 bg-gray-50 rounded-lg flex items-center justify-center text-gray-400 border border-gray-100 shadow-sm">
+                                <i class="fa-solid fa-microchip"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">Execute AI Tasks</h4>
+                                <p class="text-sm text-gray-500">Standardized computation</p>
+                            </div>
+                            <i class="fa-solid fa-arrow-down ml-auto text-gray-300"></i>
+                        </div>
+                        <div class="flex items-center gap-4 bg-white p-4 rounded-xl border border-exo-yellow/10">
+                            <div
+                                class="w-12 h-12 bg-exo-yellow/10 rounded-lg flex items-center justify-center text-exo-yellow border border-exo-yellow/20 shadow-sm">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">Submit Cryptographic Proofs</h4>
+                                <p class="text-sm text-gray-500">PoAC Verification</p>
+                            </div>
+                            <i class="fa-solid fa-arrow-down ml-auto text-gray-300"></i>
+                        </div>
+                        <div class="flex items-center gap-4 bg-white p-4 rounded-xl border border-exo-yellow/10">
+                            <div
+                                class="w-12 h-12 bg-exo-yellow rounded-lg flex items-center justify-center text-exo-dark shadow-lg">
+                                <i class="fa-solid fa-weight-scale"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">Accumulate Intelligence Weight</h4>
+                                <p class="text-sm text-gray-500">On-chain Settlement</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="order-1 lg:order-2 fade-in-up">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6 text-gray-900 tracking-tight leading-tight">The Physical
+                    Computation Layer of the AGI Stack</h2>
+                <div class="space-y-8 mt-10">
+                    <div class="flex gap-4">
+                        <div
+                            class="w-10 h-10 rounded-full bg-exo-yellow/10 border border-exo-yellow/20 flex-shrink-0 flex items-center justify-center text-exo-yellow font-black text-sm shadow-sm">
+                            1</div>
+                        <div>
+                            <h3 class="text-xl font-bold mb-2 text-gray-900">Standardized Execution</h3>
+                            <p class="text-gray-500 leading-relaxed text-lg">The only standardized node that executes
+                                real AI computation for
+                                the network.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div
+                            class="w-10 h-10 rounded-full bg-exo-yellow/10 border border-exo-yellow/20 flex-shrink-0 flex items-center justify-center text-exo-yellow font-black text-sm shadow-sm">
+                            2</div>
+                        <div>
+                            <h3 class="text-xl font-bold mb-2 text-gray-900">Measurable Architecture</h3>
+                            <p class="text-gray-600 leading-relaxed text-lg">The only hardware architecture eligible for
+                                PoAC-based measurement
+                                and reward distribution.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div
+                            class="w-10 h-10 rounded-full bg-exo-yellow/10 border border-exo-yellow/20 flex-shrink-0 flex items-center justify-center text-exo-yellow font-black text-sm shadow-sm">
+                            3</div>
+                        <div>
+                            <h3 class="text-xl font-bold mb-2 text-gray-900">Critical Interface</h3>
+                            <p class="text-gray-600 leading-relaxed text-lg">The sole interface between physical
+                                computation and on-chain
+                                settlement.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="separator-glow"></div>
+
+    <!-- 05 How It Works (PoAC) -->
+    <section id="poac" class="py-24 bg-white text-gray-900 relative tech-grid-light">
+        <div class="orb w-[500px] h-[500px] bg-[#FFC100] opacity-[0.03] top-[10%] right-[5%]"></div>
+        <div class="max-w-[1440px] mx-auto px-8 relative z-10">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl md:text-5xl font-black mb-4 text-gray-900 tracking-tight">Network Weight Is
+                    Determined by Intelligence</h2>
+                <h3 class="text-2xl text-exo-yellow mb-6 font-black uppercase tracking-widest">Not Compute Capacity</h3>
+                <p class="text-xl text-gray-600 font-bold border-b-4 border-exo-yellow/30 inline-block pb-2">PoAC
+                    measures and rewards verifiable AI intelligence contributions.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 fade-in-up mt-16">
+                <div class="col-span-1 lg:col-span-2 glass-card rounded-2xl p-8 border-exo-yellow/5 shadow-sm">
+                    <h4 class="text-sm font-black mb-10 text-gray-400 uppercase tracking-[0.3em] font-mono">Three-Step
+                        Mechanism</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div
+                            class="bg-white p-7 rounded-xl border border-exo-yellow/10 hover:border-exo-yellow transition-all group shadow-sm">
+                            <i
+                                class="fa-solid fa-laptop-code text-3xl text-gray-400 mb-6 group-hover:text-exo-yellow transition-colors"></i>
+                            <h5 class="font-black mb-3 text-gray-900 tracking-tight">Local Computation</h5>
+                            <p class="text-sm text-gray-500 leading-relaxed">Nodes perform AI tasks locally in private
+                                environments.</p>
+                        </div>
+                        <div
+                            class="bg-white p-7 rounded-xl border border-exo-yellow/10 hover:border-exo-yellow transition-all group shadow-sm">
+                            <i
+                                class="fa-solid fa-file-signature text-3xl text-gray-400 mb-6 group-hover:text-exo-yellow transition-colors"></i>
+                            <h5 class="font-black mb-3 text-gray-900 tracking-tight">Cryptographic Proof Submission</h5>
+                            <p class="text-sm text-gray-500 leading-relaxed">Proofs sent to network for global
+                                verification.</p>
+                        </div>
+                        <div
+                            class="bg-white p-7 rounded-xl border border-exo-yellow/10 hover:border-exo-yellow transition-all group shadow-sm">
+                            <i
+                                class="fa-solid fa-scale-balanced text-3xl text-gray-400 mb-6 group-hover:text-exo-yellow transition-colors"></i>
+                            <h5 class="font-black mb-3 text-gray-900 tracking-tight">On-Chain Settlement</h5>
+                            <p class="text-sm text-gray-500 leading-relaxed">Intelligence-based rewards distributed
+                                on-chain.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="col-span-1 bg-exo-yellow rounded-2xl p-8 text-exo-dark relative overflow-hidden shadow-2xl hover:scale-[1.02] transition-transform">
+                    <div class="absolute -right-10 -bottom-10 text-9xl text-exo-dark opacity-[0.05] rotate-12">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <h4 class="text-xs font-black mb-8 uppercase tracking-[0.3em] font-mono text-exo-dark/50">What Gets
+                        Accumulated
+                    </h4>
+                    <ul class="space-y-6">
+                        <li class="flex items-start gap-4"><i
+                                class="fa-solid fa-check-circle text-exo-dark mt-1"></i><span
+                                class="font-black text-lg leading-tight uppercase tracking-tight">Model
+                                Capabilities</span></li>
+                        <li class="flex items-start gap-4"><i
+                                class="fa-solid fa-check-circle text-exo-dark mt-1"></i><span
+                                class="font-black text-lg leading-tight uppercase tracking-tight">Agent Modules</span>
+                        </li>
+                        <li class="flex items-start gap-4"><i
+                                class="fa-solid fa-check-circle text-exo-dark mt-1"></i><span
+                                class="font-black text-lg leading-tight uppercase tracking-tight">Long-Term Network
+                                Influence</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="separator-glow"></div>
+
+    <!-- 06 Value Created -->
+    <section id="value" class="py-24 bg-white relative">
+        <div class="orb w-[300px] h-[300px] bg-[#FFC100] opacity-[0.05] -left-10 bottom-0"></div>
+        <div class="max-w-[1440px] mx-auto px-8 relative z-10">
+            <h2 class="text-4xl md:text-5xl font-bold mb-16 text-center text-gray-900 tracking-tight fade-in-up">How
+                ExoBrain Reshapes the AGI Economy
+            </h2>
+            <div
+                class="grid grid-cols-1 md:grid-cols-3 gap-0 rounded-[2.5rem] overflow-hidden border border-exo-yellow/10 shadow-sm fade-in-up">
+                <div
+                    class="p-12 bg-white border-b md:border-b-0 md:border-r border-exo-yellow/10 hover:bg-exo-yellow/5 transition-all duration-500 group">
+                    <div class="text-exo-yellow text-5xl mb-8 transform group-hover:scale-110 transition-transform"><i
+                            class="fa-solid fa-dna"></i></div>
+                    <h3 class="text-2xl font-black mb-4 text-gray-900 tracking-tight">Noema</h3>
+                    <p class="text-gray-500 leading-relaxed text-lg">Model capabilities continuously evolve through
+                        verifiable intelligence
+                        contributions.</p>
+                </div>
+                <div
+                    class="p-12 bg-white border-b md:border-b-0 md:border-r border-exo-yellow/10 hover:bg-exo-yellow/5 transition-all duration-500 group">
+                    <div class="text-exo-yellow text-5xl mb-8 transform group-hover:scale-110 transition-transform"><i
+                            class="fa-solid fa-users-gear"></i></div>
+                    <h3 class="text-2xl font-black mb-4 text-gray-900 tracking-tight">Agents</h3>
+                    <p class="text-gray-500 leading-relaxed text-lg">Intelligent services become measurable and
+                        economically settleable assets.
+                    </p>
+                </div>
+                <div class="p-12 bg-white hover:bg-exo-yellow/5 transition-all duration-500 group">
+                    <div class="text-exo-yellow text-5xl mb-8 transform group-hover:scale-110 transition-transform"><i
+                            class="fa-solid fa-globe"></i></div>
+                    <h3 class="text-2xl font-black mb-4 text-gray-900 tracking-tight">AGI Tokens</h3>
+                    <p class="text-gray-500 leading-relaxed text-lg">Computation becomes a productive, long-term
+                        economic asset.</p>
+                </div>
+            </div>
+            <div
+                class="mt-16 p-8 bg-exo-yellow rounded-3xl text-center fade-in-up shadow-exo-yellow/20 shadow-2xl transform hover:scale-[1.01] transition-transform">
+                <p class="text-exo-dark font-black text-xl tracking-tight"><i class="fa-solid fa-sparkles mr-3"></i>All
+                    ExoBrain computation is
+                    permanently accumulated as network intelligence value.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="separator-glow"></div>
+
+    <!-- 07 Rewards & Economics -->
+    <section id="rewards" class="py-24 bg-[#FAFAFA] tech-grid-light">
+        <div class="max-w-[1440px] mx-auto px-8">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold mb-2 text-gray-900">Beyond Block Rewards</h2>
+                <h3 class="text-2xl text-exo-yellow font-black mb-4">Long-Term Intelligence Rights</h3>
+                <p class="text-[10px] text-gray-400 uppercase tracking-[0.3em] font-mono font-bold">All rewards
+                    originate from verifiable AI
+                    intelligence contributions</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 fade-in-up">
+                <div class="glass-card p-10 rounded-2xl border-t-4 border-gray-100 shadow-sm">
+                    <h4 class="text-sm font-bold text-gray-300 mb-2 uppercase tracking-widest font-mono">Layer 1</h4>
+                    <h3 class="text-2xl font-extrabold text-gray-900 mb-6">PoAC Block Rewards</h3>
+                    <div class="text-4xl font-black text-black mb-4">$NOOS</div>
+                    <p class="text-sm text-gray-500 leading-relaxed">Base incentive for network participation and uptime
+                        secured by computation.</p>
+                </div>
+                <div
+                    class="glass-card p-10 rounded-2xl border-t-4 border-exo-yellow transform md:-translate-y-6 hover:!translate-y-[-32px] shadow-xl relative z-20 overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-exo-yellow/5 rounded-full -mr-8 -mt-8"></div>
+                    <h4 class="text-sm font-bold text-exo-yellow mb-2 uppercase tracking-widest font-mono">Layer 2</h4>
+                    <h3 class="text-2xl font-extrabold text-gray-900 mb-6">Model &amp; Agent Incentives</h3>
+                    <div class="text-4xl font-black text-black mb-4">Royalties</div>
+                    <p class="text-sm text-gray-600 leading-relaxed font-medium">Earn from the usage of models and
+                        agents you contribute to.</p>
+                </div>
+                <div class="glass-card p-10 rounded-2xl border-t-4 border-gray-900 shadow-sm">
+                    <h4 class="text-sm font-bold text-gray-300 mb-2 uppercase tracking-widest font-mono">Layer 3</h4>
+                    <h3 class="text-2xl font-extrabold text-gray-900 mb-6">IntelliPoint Weight</h3>
+                    <div class="text-4xl font-black text-black mb-4">Governance</div>
+                    <p class="text-sm text-gray-500 leading-relaxed">Long-term influence over the network's direction
+                        and asset rights.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="separator-glow"></div>
+
+    <!-- 08 Why Now -->
+    <section id="why-now" class="py-24 bg-white relative">
+        <div class="orb w-[600px] h-[600px] bg-gray-50 opacity-80 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+        </div>
+        <div class="max-w-[1440px] mx-auto px-8 relative z-10">
+            <div class="flex flex-col lg:flex-row gap-16 items-center">
+                <div class="lg:w-1/2 fade-in-up">
+                    <h2 class="text-6xl font-bold mb-8 text-black leading-tight">Why Now?</h2>
+                    <p
+                        class="text-2xl text-gray-600 border-l-4 border-exo-yellow pl-8 py-2 mb-10 leading-relaxed font-medium">
+                        The earlier intelligence is contributed, the earlier it becomes foundational to the AGI economy.
+                    </p>
+                    <div class="space-y-6">
+                        <div
+                            class="p-8 glass-card rounded-2xl border-exo-yellow/10 flex items-center gap-6 group hover:border-exo-yellow transition-all">
+                            <div
+                                class="w-12 h-12 bg-exo-yellow/10 rounded-xl flex items-center justify-center text-exo-yellow font-bold text-xl">
+                                1</div>
+                            <div class="text-lg font-bold text-gray-900">Testnet Stage with the Lowest Entry Threshold
+                            </div>
+                        </div>
+                        <div
+                            class="p-8 glass-card rounded-2xl border-exo-yellow/10 flex items-center gap-6 group hover:border-exo-yellow transition-all">
+                            <div
+                                class="w-12 h-12 bg-exo-yellow/10 rounded-xl flex items-center justify-center text-exo-yellow font-bold text-xl">
+                                2</div>
+                            <div class="text-lg font-bold text-gray-900">Intelligence Contributions Can Be Accumulated
+                                Early</div>
+                        </div>
+                        <div
+                            class="p-8 glass-card rounded-2xl border-exo-yellow/10 flex items-center gap-6 group hover:border-exo-yellow transition-all">
+                            <div
+                                class="w-12 h-12 bg-exo-yellow/10 rounded-xl flex items-center justify-center text-exo-yellow font-bold text-xl">
+                                3</div>
+                            <div class="text-lg font-bold text-gray-900">IntelliPoint Establishes Long-Term Network
+                                Advantage</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:w-1/2 fade-in-up flex justify-center">
+                    <div
+                        class="relative w-full max-w-md aspect-square bg-exo-yellow/5 rounded-full flex items-center justify-center border border-exo-yellow/10 overflow-hidden">
+                        <div
+                            class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,193,0,0.1)_0%,transparent_70%)]">
+                        </div>
+                        <i class="fa-solid fa-clock-rotate-left text-[120px] text-exo-yellow/20"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="separator-glow"></div>
+
+    <!-- 08 Why Now -->
+    <section class="py-24 bg-white relative overflow-hidden">
+        <div class="max-w-[1440px] mx-auto px-8 relative z-10">
+            <h2 class="text-4xl md:text-5xl font-bold mb-16 text-center text-gray-900 tracking-tight fade-in-up">The
+                Critical Transition Point</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 fade-in-up">
+                <div
+                    class="group p-10 glass-card rounded-3xl border-exo-yellow/10 hover:border-exo-yellow transition-all duration-500">
+                    <div
+                        class="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center mb-8 text-gray-400 group-hover:bg-exo-yellow group-hover:text-exo-dark transition-all">
+                        <i class="fa-solid fa-hourglass-start text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-black mb-4 text-gray-900 tracking-tight">Today: Isolated Compute</h3>
+                    <p class="text-gray-500 leading-relaxed text-lg">Hardware is used for static tasks. Value is
+                        ephemeral and centralized.
+                    </p>
+                </div>
+                <div
+                    class="group p-10 glass-card rounded-3xl border-exo-yellow/30 bg-exo-yellow/5 hover:border-exo-yellow transition-all duration-500">
+                    <div
+                        class="w-14 h-14 bg-exo-yellow rounded-2xl flex items-center justify-center mb-8 text-exo-dark shadow-xl">
+                        <i class="fa-solid fa-infinity text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-black mb-4 text-gray-900 tracking-tight">ExoBrain: Cumulative Intelligence
+                    </h3>
+                    <p class="text-gray-900 leading-relaxed text-lg font-medium">Hardware becomes an entry point to a
+                        persistent, evolving,
+                        and sovereign AGI network.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="separator-glow"></div>
+
+    <!-- 09 Specs -->
+    <section id="specs" class="py-24 bg-white tech-grid-light">
+        <div class="max-w-[1440px] mx-auto px-8">
+            <div class="text-center mb-20 fade-in-up">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6 text-gray-900 tracking-tight">Directional Hardware
+                    Requirements</h2>
+                <div class="h-1.5 w-24 bg-exo-yellow mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-6 fade-in-up">
+                <div class="p-8 glass-card rounded-2xl border-exo-yellow/5 group hover:bg-exo-yellow/5 transition-all">
+                    <div class="text-exo-yellow mb-6 text-2xl group-hover:scale-110 transition-transform"><i
+                            class="fa-solid fa-microchip"></i></div>
+                    <h4 class="text-sm font-bold text-gray-400 mb-2 uppercase tracking-widest">GPU</h4>
+                    <p class="text-lg font-bold text-gray-900">High-performance GPUs optimized for AI</p>
+                </div>
+                <div class="p-8 glass-card rounded-2xl border-exo-yellow/5 group hover:bg-exo-yellow/5 transition-all">
+                    <div class="text-exo-yellow mb-6 text-2xl group-hover:scale-110 transition-transform"><i
+                            class="fa-solid fa-memory"></i></div>
+                    <h4 class="text-sm font-bold text-gray-400 mb-2 uppercase tracking-widest">Memory</h4>
+                    <p class="text-lg font-bold text-gray-900">Sufficient VRAM for workloads</p>
+                </div>
+                <div class="p-8 glass-card rounded-2xl border-exo-yellow/5 group hover:bg-exo-yellow/5 transition-all">
+                    <div class="text-exo-yellow mb-6 text-2xl group-hover:scale-110 transition-transform"><i
+                            class="fa-solid fa-network-wired"></i></div>
+                    <h4 class="text-sm font-bold text-gray-400 mb-2 uppercase tracking-widest">Network</h4>
+                    <p class="text-lg font-bold text-gray-900">High bandwidth & low latency</p>
+                </div>
+                <div class="p-8 glass-card rounded-2xl border-exo-yellow/5 group hover:bg-exo-yellow/5 transition-all">
+                    <div class="text-exo-yellow mb-6 text-2xl group-hover:scale-110 transition-transform"><i
+                            class="fa-solid fa-bolt"></i></div>
+                    <h4 class="text-sm font-bold text-gray-400 mb-2 uppercase tracking-widest">Power</h4>
+                    <p class="text-lg font-bold text-gray-900">Designed for 24/7 operation</p>
+                </div>
+                <div class="p-8 glass-card rounded-2xl border-exo-yellow/5 group hover:bg-exo-yellow/5 transition-all">
+                    <div class="text-exo-yellow mb-6 text-2xl group-hover:scale-110 transition-transform"><i
+                            class="fa-solid fa-server"></i></div>
+                    <h4 class="text-sm font-bold text-gray-400 mb-2 uppercase tracking-widest">Deployment</h4>
+                    <p class="text-lg font-bold text-gray-900">Standalone & Clustered</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="separator-glow"></div>
+
+    <!-- 10 Ecosystem -->
+    <section class="py-24 bg-white relative">
+        <div class="max-w-[1440px] mx-auto px-8 text-center relative z-10">
+            <h2 class="text-4xl md:text-5xl font-bold mb-4 text-gray-900 tracking-tight fade-in-up">The Full AGI
+                Economic Stack</h2>
+            <p class="text-xl text-gray-500 mb-16 fade-in-up">Become a Foundational Intelligence Node in the AGI Economy
+            </p>
+            <div class="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-4 fade-in-up">
+                <div class="px-8 py-4 bg-gray-50 rounded-xl font-bold text-gray-900 border border-gray-100">ExoBrain
+                </div>
+                <i class="fa-solid fa-chevron-right text-gray-300 hidden md:block"></i>
+                <div class="px-8 py-4 bg-gray-50 rounded-xl font-bold text-gray-900 border border-gray-100">Noos</div>
+                <i class="fa-solid fa-chevron-right text-gray-300 hidden md:block"></i>
+                <div class="px-8 py-4 bg-gray-50 rounded-xl font-bold text-gray-900 border border-gray-100">Noema</div>
+                <i class="fa-solid fa-chevron-right text-gray-300 hidden md:block"></i>
+                <div class="px-8 py-4 bg-gray-50 rounded-xl font-bold text-gray-900 border border-gray-100">Agents</div>
+                <i class="fa-solid fa-chevron-right text-gray-300 hidden md:block"></i>
+                <div
+                    class="px-8 py-4 bg-exo-yellow/10 rounded-xl font-bold text-exo-yellow border border-exo-yellow/20">
+                    Applications</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 11 Final CTA -->
+    <section class="py-24 bg-white tech-grid-light relative overflow-hidden">
+        <div
+            class="orb w-[600px] h-[600px] bg-exo-yellow opacity-[0.08] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        </div>
+        <div class="max-w-[1440px] mx-auto px-8 relative z-10">
+            <div
+                class="glass-card p-20 rounded-[3rem] text-center border-exo-yellow/30 bg-white/40 shadow-2xl fade-in-up transform hover:scale-[1.01] transition-transform">
+                <h2 class="text-4xl md:text-6xl font-bold mb-10 text-gray-900 leading-tight tracking-tight">Become a
+                    Foundational Intelligence Node<br>of the AGI Economy</h2>
+                <div class="flex flex-col sm:flex-row gap-6 justify-center mt-12">
+                    <button
+                        class="px-12 py-6 bg-exo-yellow text-exo-dark rounded-full text-xl font-bold tracking-widest uppercase shadow-xl hover:scale-105 transition-all">
+                        Run ExoBrain Nodes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-20 bg-white border-t border-exo-yellow/10">
+        <div class="max-w-[1440px] mx-auto px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
+                <div class="col-span-1 md:col-span-1">
+                    <div class="flex items-center gap-3 mb-8">
+                        <div class="w-8 h-8 text-exo-yellow">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 370.5 370.5" fill="currentColor">
+                                <path
+                                    d="M172.08,369.3a28.857,28.857,0,0,1-7.891-26.143c-.807-12.814-4.364-16.61-4.364-16.61l.033-.03-21.381-21.381-.051.045s-3.324-4.223-19.82-5.919l-.034,0a28.881,28.881,0,1,1,24.363-24.684c.025.111.048.227.067.346.022-.435.046-.866.08-1.3.031-.319.052.4.052,1.1a9.032,9.032,0,0,1-.025,1.118.63.63,0,0,1-.021-.183c-.019-.263-.046-.505-.086-.735a32.933,32.933,0,0,0,5.2,18.942l23.127,23.127c1.864,1.43,6.822,4.015,17.739,3.192l.382-.025A28.882,28.882,0,1,1,172.08,369.3Zm78.186-78.188a28.878,28.878,0,1,1,20.421,8.459A28.878,28.878,0,0,1,250.266,291.107Zm78.186-78.185a28.878,28.878,0,1,1,20.421,8.459A28.878,28.878,0,0,1,328.451,212.922Zm-156.371,0a29.176,29.176,0,0,1-2.2-2.464q-.108-.1-.217-.2a46.817,46.817,0,0,0-18.918-10.333H76.706l-.006.07s-8.136.813-16.324,8.208a28.846,28.846,0,1,1,.433-30.713c7.659,7.177,13.729,7.568,14.67,7.584h75.531a34.531,34.531,0,0,0,17.6-8.808,28.885,28.885,0,1,1,3.469,36.657Zm78.186-78.185a28.878,28.878,0,1,1,20.421,8.459A28.878,28.878,0,0,1,250.266,134.736Zm-156.371,0a28.883,28.883,0,0,1,27.2-48.5c.279.006.57.021.876.047,7.674.64,12.117-1.742,14.271-3.465l1.637-1.637,23.13-23.132c1.332-1.736,3.665-6.159,3.313-15.592a28.884,28.884,0,1,1,29.858,22.5c-.583.046-1.222.071-1.922.073-16.916.05-21.691,4.527-21.691,4.527l-.03-.034L149.151,90.909l.045.05a1.281,1.281,0,0,0-.232.137l-.875.875c-1.329,1.689-3.525,6.061-4.662,17.091-.1.921-.218,1.744-.364,2.475a28.881,28.881,0,0,1-49.169,23.2Z" />
+                            </svg>
+                        </div>
+                        <span class="text-2xl font-bold tracking-tight text-gray-900 font-mono">ExoBrain</span>
+                    </div>
+                    <p class="text-gray-400 font-bold leading-relaxed pr-8">The measurable infrastructure for the
+                        sovereign AGI era.</p>
+                </div>
+                <div>
+                    <h5 class="font-black text-gray-900 mb-8 uppercase tracking-widest text-sm">Network</h5>
+                    <ul class="space-y-4">
+                        <li><a href="#"
+                                class="text-gray-400 hover:text-exo-yellow transition-colors font-bold">Explorer</a>
+                        </li>
+                        <li><a href="#"
+                                class="text-gray-400 hover:text-exo-yellow transition-colors font-bold">Documentation</a>
+                        </li>
+                        <li><a href="#"
+                                class="text-gray-400 hover:text-exo-yellow transition-colors font-bold">Incentives</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-black text-gray-900 mb-8 uppercase tracking-widest text-sm">Governance</h5>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-gray-400 hover:text-exo-yellow transition-colors font-bold">DAO
+                                Portal</a></li>
+                        <li><a href="#"
+                                class="text-gray-400 hover:text-exo-yellow transition-colors font-bold">Research</a>
+                        </li>
+                        <li><a href="#"
+                                class="text-gray-400 hover:text-exo-yellow transition-colors font-bold">Grants</a></li>
+                    </ul>
+                </div>
+                <div class="flex flex-col gap-8">
+                    <h5 class="font-black text-gray-900 uppercase tracking-widest text-sm">Connect</h5>
+                    <div class="flex gap-6">
+                        <a href="#"
+                            class="w-12 h-12 rounded-xl bg-gray-50 border border-exo-yellow/5 flex items-center justify-center text-gray-400 hover:bg-exo-yellow hover:text-exo-dark transition-all">
+                            <i class="fa-brands fa-x-twitter text-xl"></i>
+                        </a>
+                        <a href="#"
+                            class="w-12 h-12 rounded-xl bg-gray-50 border border-exo-yellow/5 flex items-center justify-center text-gray-400 hover:bg-exo-yellow hover:text-exo-dark transition-all">
+                            <i class="fa-brands fa-discord text-xl"></i>
+                        </a>
+                        <a href="#"
+                            class="w-12 h-12 rounded-xl bg-gray-50 border border-exo-yellow/5 flex items-center justify-center text-gray-400 hover:bg-exo-yellow hover:text-exo-dark transition-all">
+                            <i class="fa-brands fa-github text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="pt-8 border-t border-exo-yellow/10 flex flex-col md:flex-row justify-between items-center gap-6">
+                <p class="text-sm font-black text-gray-300 uppercase tracking-[0.3em]">© 2024 ExoBrain Foundation</p>
+                <div class="flex gap-10">
+                    <a href="#"
+                        class="text-xs font-black text-gray-400 hover:text-exo-yellow transition-colors uppercase tracking-widest">Privacy
+                        Policy</a>
+                    <a href="#"
+                        class="text-xs font-black text-gray-400 hover:text-exo-yellow transition-colors uppercase tracking-widest">Terms
+                        of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+            // Fluid Hero Image Interaction
+            (function () {
+                const container = document.getElementById('hero-image-container');
+                const img = document.getElementById('fluid-image');
+                if (!container || !img) return;
+
+                container.parentElement.addEventListener('mousemove', (e) => {
+                    const rect = container.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+
+                    const rotateX = -y / 20;
+                    const rotateY = x / 20;
+
+                    container.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+                    img.style.filter = `drop-shadow(${x / 10}px ${y / 10}px 30px rgba(255,193,0,0.3))`;
+                });
+
+                container.parentElement.addEventListener('mouseleave', () => {
+                    container.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`;
+                    img.style.filter = `drop-shadow(0 0 20px rgba(0,0,0,0.1))`;
+                });
+            })();
+
+        // Particle Network Animation
+        (function () {
+            const canvas = document.getElementById('particle-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            let mouse = { x: null, y: null };
+            const COUNT = 80, CONN = 150, MR = 250;
+            function resize() { const h = canvas.parentElement; canvas.width = h.offsetWidth; canvas.height = h.offsetHeight; }
+            function init() { particles = []; for (let i = 0; i < COUNT; i++) particles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, vx: (Math.random() - 0.5) * 0.8, vy: (Math.random() - 0.5) * 0.8, r: Math.random() * 2 + 1 }); }
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach((p, i) => {
+                    p.x += p.vx; p.y += p.vy;
+                    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                    if (mouse.x !== null) { const dx = p.x - mouse.x, dy = p.y - mouse.y, d = Math.sqrt(dx * dx + dy * dy); if (d < MR) { const f = (MR - d) / MR * 0.03; p.vx += dx * f; p.vy += dy * f; } }
+                    p.vx *= 0.98; p.vy *= 0.98;
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,193,0,0.4)'; ctx.fill();
+                    for (let j = i + 1; j < particles.length; j++) { const q = particles[j], dx = p.x - q.x, dy = p.y - q.y, d = Math.sqrt(dx * dx + dy * dy); if (d < CONN) { ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.strokeStyle = `rgba(255,193,0,${0.2 * (1 - d / CONN)})`; ctx.lineWidth = 0.5; ctx.stroke(); } }
+                });
+                requestAnimationFrame(draw);
+            }
+            window.addEventListener('mousemove', e => { const r = canvas.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; });
+            window.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
+            window.addEventListener('resize', () => { resize(); init(); });
+            resize(); init(); draw();
+        })();
+
+        // Scroll Fade-in (Refined Silky Reveal)
+        (function () {
+            const obs = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) {
+                        e.target.style.opacity = '1';
+                        e.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+            document.querySelectorAll('.fade-in-up').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'all 1.2s cubic-bezier(0.2, 0.8, 0.2, 1)';
+                obs.observe(el);
+            });
+        })();
+    </script>
+
+</body>
+
+</html>
