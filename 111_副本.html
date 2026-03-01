@@ -182,46 +182,6 @@
             line-height: 1.1;
             letter-spacing: -0.03em;
         }
-
-        @keyframes swapExclamation {
-
-            0%,
-            45% {
-                transform: scale(1) rotate(0deg);
-                opacity: 1;
-            }
-
-            50%,
-            95% {
-                transform: scale(0.5) rotate(180deg);
-                opacity: 0;
-            }
-
-            100% {
-                transform: scale(1) rotate(0deg);
-                opacity: 1;
-            }
-        }
-
-        @keyframes swapQuestion {
-
-            0%,
-            45% {
-                transform: scale(0.5) rotate(-180deg);
-                opacity: 0;
-            }
-
-            50%,
-            95% {
-                transform: scale(1) rotate(0deg);
-                opacity: 0.6;
-            }
-
-            100% {
-                transform: scale(0.5) rotate(-180deg);
-                opacity: 0;
-            }
-        }
     </style>
 </head>
 
@@ -243,31 +203,24 @@
 
             <nav class="hidden lg:flex items-center gap-10">
                 <a href="#hero" class="text-sm font-bold text-gray-500 hover:text-exo-yellow transition-colors">Home</a>
-                <a href="#role"
-                    class="text-sm font-bold text-gray-500 hover:text-exo-yellow transition-colors">Product</a>
-                <a href="#poac" class="text-sm font-bold text-gray-500 hover:text-exo-yellow transition-colors">How It
-                    Works</a>
-                <a href="#worldview"
-                    class="text-sm font-bold text-gray-500 hover:text-exo-yellow transition-colors">Network</a>
-                <a href="#"
-                    class="text-sm font-bold text-gray-500 hover:text-exo-yellow transition-colors">Developers</a>
-                <a href="#" class="text-sm font-bold text-gray-500 hover:text-exo-yellow transition-colors">Noos
-                    Network</a>
+                <span
+                    class="text-sm font-bold text-gray-500 hover:text-exo-yellow transition-colors cursor-default">Product</span>
+                <span class="text-sm font-bold text-gray-500 hover:text-exo-yellow transition-colors cursor-default">How
+                    It
+                    Works</span>
+                <span
+                    class="text-sm font-bold text-gray-500 hover:text-exo-yellow transition-colors cursor-default">Network</span>
+                <span
+                    class="text-sm font-bold text-gray-500 hover:text-exo-yellow transition-colors cursor-default">Developers</span>
+                <span
+                    class="text-sm font-bold text-gray-500 hover:text-exo-yellow transition-colors cursor-default">Noos
+                    Network</span>
                 <a href="https://x.com/ExoBrainAGI" target="_blank"
                     class="text-sm font-bold text-gray-500 hover:text-exo-yellow transition-colors"><i
                         class="fa-brands fa-x-twitter text-lg"></i></a>
             </nav>
 
-            <div
-                class="flex items-center group cursor-pointer text-gray-900 opacity-60 hover:text-exo-yellow hover:opacity-100 transition-none">
-                <div
-                    class="relative w-6 h-6 flex items-center justify-center rounded-full border-[1.5px] border-dashed border-current">
-                    <i class="fa-solid fa-exclamation absolute text-[10px]"
-                        style="animation: swapExclamation 3s ease-in-out infinite;"></i>
-                    <i class="fa-solid fa-question absolute text-[10px]"
-                        style="animation: swapQuestion 3s ease-in-out infinite;"></i>
-                </div>
-            </div>
+
         </div>
     </header>
 
@@ -494,7 +447,8 @@
                         class="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity">
                         <i class="fa-solid fa-filter-circle-xmark text-8xl text-black"></i>
                     </div>
-                    <div class="w-14 h-14 bg-red-500/10 rounded-xl flex items-center justify-center mb-6 text-red-500">
+                    <div
+                        class="w-14 h-14 bg-red-500/10 rounded-xl flex items-center justify-center mb-6 text-red-500 group-hover:bg-exo-yellow/10 group-hover:text-exo-yellow transition-none">
                         <i class="fa-solid fa-droplet-slash text-2xl"></i>
                     </div>
                     <h3 class="text-2xl font-black mb-4 text-gray-900 tracking-tight">Value Leakage</h3>
@@ -507,7 +461,8 @@
                         class="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity">
                         <i class="fa-solid fa-box text-8xl text-black"></i>
                     </div>
-                    <div class="w-14 h-14 bg-red-500/10 rounded-xl flex items-center justify-center mb-6 text-red-500">
+                    <div
+                        class="w-14 h-14 bg-red-500/10 rounded-xl flex items-center justify-center mb-6 text-red-500 group-hover:bg-exo-yellow/10 group-hover:text-exo-yellow transition-none">
                         <i class="fa-solid fa-eye-slash text-2xl"></i>
                     </div>
                     <h3 class="text-2xl font-black mb-4 text-gray-900 tracking-tight">Compute Black Box</h3>
@@ -545,7 +500,7 @@
                                 <h4 class="font-bold text-gray-900">Execute AI Tasks</h4>
                                 <p class="text-sm text-gray-500">Standardized computation</p>
                             </div>
-                            <i class="fa-solid fa-arrow-down ml-auto text-gray-300"></i>
+
                         </div>
                         <div class="flex items-center gap-4 bg-white p-4 rounded-xl border border-exo-yellow/10">
                             <div
@@ -556,7 +511,7 @@
                                 <h4 class="font-bold text-gray-900">Submit Cryptographic Proofs</h4>
                                 <p class="text-sm text-gray-500">PoAC Verification</p>
                             </div>
-                            <i class="fa-solid fa-arrow-down ml-auto text-gray-300"></i>
+
                         </div>
                         <div class="flex items-center gap-4 bg-white p-4 rounded-xl border border-exo-yellow/10">
                             <div
@@ -725,7 +680,7 @@
             </div>
             <div
                 class="mt-16 p-8 bg-exo-yellow rounded-3xl text-center fade-in-up shadow-exo-yellow/20 shadow-2xl transform hover:scale-[1.01] transition-transform">
-                <p class="text-exo-dark font-black text-xl tracking-tight"><i class="fa-solid fa-sparkles mr-3"></i>All
+                <p class="text-exo-dark font-black text-xl tracking-tight">All
                     ExoBrain computation is dedicated to verifiable AI tasks and permanently accumulated as network
                     intelligence.</p>
             </div>
@@ -774,86 +729,7 @@
 
     <div class="separator-glow"></div>
 
-    <!-- 08 Why Now -->
-    <section id="why-now" class="py-24 bg-white relative">
-        <div class="orb w-[600px] h-[600px] bg-gray-50 opacity-80 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-        </div>
-        <div class="max-w-[1440px] mx-auto px-8 relative z-10">
-            <div class="flex flex-col gap-16 items-center">
-                <div class="w-full fade-in-up text-left">
-                    <h2 class="text-6xl font-bold mb-6 text-black leading-tight">Why Now?</h2>
-                    <p
-                        class="text-xl text-gray-600 border-l-4 border-exo-yellow pl-6 py-2 mb-12 leading-relaxed font-medium">
-                        The earlier intelligence is contributed, the earlier it becomes foundational to the AGI economy.
-                    </p>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div
-                            class="p-6 glass-card rounded-xl border-exo-yellow/10 flex flex-col items-center text-center gap-4 group hover:border-exo-yellow hover:-translate-y-2 transition-all duration-300">
-                            <div
-                                class="w-12 h-12 bg-exo-yellow/10 rounded-full flex items-center justify-center text-exo-yellow font-black text-xl shadow-sm mb-2 group-hover:bg-exo-yellow group-hover:text-exo-dark transition-colors">
-                                1</div>
-                            <div class="text-lg font-bold text-gray-800 leading-snug">Testnet Stage with the<br />Lowest
-                                Entry Threshold
-                            </div>
-                        </div>
-                        <div
-                            class="p-6 glass-card rounded-xl border-exo-yellow/10 flex flex-col items-center text-center gap-4 group hover:border-exo-yellow hover:-translate-y-2 transition-all duration-300">
-                            <div
-                                class="w-12 h-12 bg-exo-yellow/10 rounded-full flex items-center justify-center text-exo-yellow font-black text-xl shadow-sm mb-2 group-hover:bg-exo-yellow group-hover:text-exo-dark transition-colors">
-                                2</div>
-                            <div class="text-lg font-bold text-gray-800 leading-snug">Intelligence Contributions Can
-                                Be<br />Accumulated Early</div>
-                        </div>
-                        <div
-                            class="p-6 glass-card rounded-xl border-exo-yellow/10 flex flex-col items-center text-center gap-4 group hover:border-exo-yellow hover:-translate-y-2 transition-all duration-300">
-                            <div
-                                class="w-12 h-12 bg-exo-yellow/10 rounded-full flex items-center justify-center text-exo-yellow font-black text-xl shadow-sm mb-2 group-hover:bg-exo-yellow group-hover:text-exo-dark transition-colors">
-                                3</div>
-                            <div class="text-lg font-bold text-gray-800 leading-snug">IntelliPoint
-                                Establishes<br />Long-Term Network Advantage</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <div class="separator-glow"></div>
-
-    <!-- 08 Why Now -->
-    <section class="py-24 bg-white relative overflow-hidden">
-        <div class="max-w-[1440px] mx-auto px-8 relative z-10">
-            <h2 class="text-4xl md:text-5xl font-bold mb-16 text-center text-gray-900 tracking-tight fade-in-up">The
-                Critical Transition Point</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 fade-in-up">
-                <div
-                    class="group p-10 glass-card rounded-3xl border-exo-yellow/10 hover:border-exo-yellow transition-all duration-500">
-                    <div
-                        class="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center mb-8 text-gray-400 group-hover:bg-exo-yellow group-hover:text-exo-dark transition-all">
-                        <i class="fa-solid fa-hourglass-start text-2xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-black mb-4 text-gray-900 tracking-tight">Today: Isolated Compute</h3>
-                    <p class="text-gray-500 leading-relaxed text-lg">Hardware is used for static tasks. Value is
-                        ephemeral and centralized.
-                    </p>
-                </div>
-                <div
-                    class="group p-10 glass-card rounded-3xl border-exo-yellow/30 bg-exo-yellow/5 hover:border-exo-yellow transition-all duration-500">
-                    <div
-                        class="w-14 h-14 bg-exo-yellow rounded-2xl flex items-center justify-center mb-8 text-exo-dark shadow-xl">
-                        <i class="fa-solid fa-infinity text-2xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-black mb-4 text-gray-900 tracking-tight">ExoBrain: Cumulative Intelligence
-                    </h3>
-                    <p class="text-gray-900 leading-relaxed text-lg font-medium">Hardware becomes an entry point to a
-                        persistent, evolving,
-                        and sovereign AGI network.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <div class="separator-glow"></div>
 
     <!-- 09 Specs -->
     <section id="specs" class="py-24 bg-white tech-grid-light">
@@ -967,27 +843,29 @@
                 <div>
                     <h5 class="font-black text-gray-900 mb-8 uppercase tracking-widest text-sm">Network</h5>
                     <ul class="space-y-4">
-                        <li><a href="#"
-                                class="text-gray-400 hover:text-exo-yellow transition-colors font-bold">Explorer</a>
+                        <li><span
+                                class="text-gray-400 hover:text-exo-yellow transition-colors font-bold cursor-default">Explorer</span>
                         </li>
-                        <li><a href="#"
-                                class="text-gray-400 hover:text-exo-yellow transition-colors font-bold">Documentation</a>
+                        <li><span
+                                class="text-gray-400 hover:text-exo-yellow transition-colors font-bold cursor-default">Documentation</span>
                         </li>
-                        <li><a href="#"
-                                class="text-gray-400 hover:text-exo-yellow transition-colors font-bold">Incentives</a>
+                        <li><span
+                                class="text-gray-400 hover:text-exo-yellow transition-colors font-bold cursor-default">Incentives</span>
                         </li>
                     </ul>
                 </div>
                 <div>
                     <h5 class="font-black text-gray-900 mb-8 uppercase tracking-widest text-sm">Governance</h5>
                     <ul class="space-y-4">
-                        <li><a href="#" class="text-gray-400 hover:text-exo-yellow transition-colors font-bold">DAO
-                                Portal</a></li>
-                        <li><a href="#"
-                                class="text-gray-400 hover:text-exo-yellow transition-colors font-bold">Research</a>
+                        <li><span
+                                class="text-gray-400 hover:text-exo-yellow transition-colors font-bold cursor-default">DAO
+                                Portal</span></li>
+                        <li><span
+                                class="text-gray-400 hover:text-exo-yellow transition-colors font-bold cursor-default">Research</span>
                         </li>
-                        <li><a href="#"
-                                class="text-gray-400 hover:text-exo-yellow transition-colors font-bold">Grants</a></li>
+                        <li><span
+                                class="text-gray-400 hover:text-exo-yellow transition-colors font-bold cursor-default">Grants</span>
+                        </li>
                     </ul>
                 </div>
                 <div class="flex flex-col gap-8">
